@@ -1,0 +1,428 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#193c32"><title>The Last Acorn · Family Guide</title><style>
+*{box-sizing:border-box}body{margin:0;background:#faf6eb;color:#20382e;font:18px/1.55 system-ui,sans-serif}main{max-width:760px;margin:auto;padding:0 18px 44px}.hero{margin:0 -18px;background:#173a31;color:#fff2ce}.hero canvas{display:block;width:100%;height:auto;aspect-ratio:3.4}.hero h1{font:normal clamp(29px,6vw,46px)/1.12 Georgia,serif;margin:0;padding:18px 22px 21px}h2{font:600 clamp(24px,5vw,32px)/1.18 Georgia,serif;margin:28px 0 10px}p{margin:8px 0 14px}.example{display:flex;align-items:center;gap:12px;justify-content:space-between;background:#173c32;color:#fff5d4;border-radius:9px;padding:12px 16px;max-width:350px}.example span{font:22px Georgia,serif}.example b{white-space:nowrap;border:3px solid #ffce65;outline:2px solid #ffce6560;outline-offset:3px;border-radius:22px;padding:3px 12px;font:700 16px system-ui}figure{margin:18px 0}figcaption{font-size:15px;margin:8px 0;color:#4a5548}a{color:#205d48}a.play{display:inline-block;background:#22503e;color:white;border-radius:24px;padding:9px 20px;font-weight:700;text-decoration:none}a:focus-visible{outline:3px solid #be7927;outline-offset:3px}hr{border:0;border-top:1px solid #d8ccae;margin:24px 0}li{padding-left:2px;margin-bottom:8px}ol{padding-left:1.5em}footer{margin-top:28px;color:#76552c;font:italic 20px Georgia,serif}
+</style></head><body><main><header class="hero"><canvas id="wood" width="1000" height="294" role="img" aria-label="Tom fans his copper tail in an autumn woodland. Two Pilgrims stand beside a harvest cornucopia."></canvas><h1>The Last Acorn · Family Guide</h1></header>
+<h2>How do I get the words off Tom?</h2><p>Look for the box called <strong>Turkey anatomy</strong>. On a computer, it’s to the <strong>right of the picture</strong>. On a phone, scroll <strong>just below the picture</strong>.</p>
+<figure><div class="example"><span>Turkey anatomy</span><b>✕ Close</b></div><figcaption>Look for this header in the game. Press the circled <strong>✕ Close</strong>.</figcaption></figure>
+<p>The box and the words on Tom disappear together. To bring them back, press <strong>Show anatomy</strong> above the picture.</p>
+<a class="play" href="./">Open the game</a><hr><h2>Just want to watch?</h2><p>Turn up your volume and press <strong>▶ Play story</strong> beneath the picture. Tom will gobble, and the story will play by itself. At the end, press <strong>Watch again</strong> for an encore.</p>
+<h2>Want to play with Tom?</h2><p>Press <strong>Try a move</strong>, then choose <strong>Fan tail</strong>, <strong>Fly to log</strong>, or <strong>Rake leaves</strong>. For another loud gobble, press <strong>Gobble!</strong></p>
+<h2>How do I win the Golden Acorn?</h2><ol><li>Press <strong>Anatomy hunt</strong>. Read the clue above the woodland picture.</li><li>Choose the move named in the clue. Then tap the body part that answers it. If Tom moves too fast, use the answer buttons in the <strong>Turkey anatomy</strong> box.</li><li>Find all three parts to earn your badge. Press <strong>Download badge (PNG)</strong> to save it as a picture.</li></ol>
+<footer>Happy Thanksgiving, Bogans &amp; family!<br>Love, Bob in Las Vegas 🎲</footer></main><script>/* A layered, seeded woodland illustration. All scenery is painted once per session. */
+(function () {
+  "use strict";
+  let landscape;
+  const tau = Math.PI * 2;
+  function brush(c) {
+    function path(d, color, stroke, width=1) {
+      const p = new Path2D(d);
+      if (color) { c.fillStyle=color; c.fill(p); }
+      if (stroke) { c.strokeStyle=stroke; c.lineWidth=width; c.stroke(p); }
+    }
+    function oval(x,y,rx,ry,color,angle=0) {
+      c.beginPath(); c.ellipse(x,y,Math.max(.01,rx),Math.max(.01,ry),angle,0,tau); c.fillStyle=color; c.fill();
+    }
+    function line(x,y,u,v,color,width=1) {
+      c.beginPath(); c.moveTo(x,y); c.lineTo(u,v); c.strokeStyle=color; c.lineWidth=width; c.stroke();
+    }
+    return {path,oval,line};
+  }
+  function compose() {
+    const canvas = document.createElement('canvas');
+    canvas.width=1500; canvas.height=900;
+    const c=canvas.getContext('2d'); c.scale(1.5,1.5); c.lineCap='round'; c.lineJoin='round';
+    const {path,oval,line}=brush(c);
+    let seed=1583309;
+    const rand=()=>((seed=Math.imul(seed,1664525)+1013904223>>>0)/4294967296);
+    const range=(a,b)=>a+(b-a)*rand();
+    const pick=a=>a[Math.floor(rand()*a.length)];
+    const gradient=(x,y,u,v,stops)=>{const g=c.createLinearGradient(x,y,u,v); stops.forEach(([p,s])=>g.addColorStop(p,s));return g;};
+    const sky=gradient(0,0,0,430,[[0,'#49797c'],[.37,'#a6bb9d'],[.76,'#ffe2a0'],[1,'#d1a46e']]);
+    c.fillStyle=sky; c.fillRect(0,0,1000,600);
+    const glow=c.createRadialGradient(715,165,1,715,165,276);
+    glow.addColorStop(0,'#fff3be');glow.addColorStop(.25,'#ffe8a3be');glow.addColorStop(1,'#ffd09100');
+    c.fillStyle=glow;c.fillRect(390,0,610,485);
+    for (let layer=0;layer<3;layer++) {
+      const base=220+layer*43;
+      const hill=new Path2D(); hill.moveTo(-20,450);
+      for(let x=-20;x<1030;x+=3) {const y=base+25*Math.sin(x*.007+layer*.8)+12*Math.cos(x*.014-layer)+5*Math.sin(x*.05);hill.lineTo(x,y);}
+      hill.lineTo(1030,470);hill.closePath(); c.fillStyle=['#93a892','#829981','#668978'][layer]; c.fill(hill);
+    }
+    for(let i=0;i<132;i++){
+      const x=range(-20,1020),base=range(259,374),h=range(16,76),w=h*range(.14,.27);
+      const d=new Path2D(); d.moveTo(x,base-h);
+      for(let j=1;j<=7;j++){const y=base-h+h*j/7,ww=w*j/7;d.lineTo(x+ww,y);d.lineTo(x+ww*.57,y-h*.047);}
+      d.lineTo(x,base+1);
+      for(let j=7;j>=1;j--){const y=base-h+h*j/7,ww=w*j/7;d.lineTo(x-ww*.58,y-h*.046);d.lineTo(x-ww,y);}
+      d.closePath();c.fillStyle=pick(['#56796c','#5e8271','#799278','#879779','#668675']);c.fill(d);
+    }
+    // Middle-distance maple crowns have broad shadow masses and a sun-facing rim.
+    function crown(x,y,rx,ry,colors) {
+      for(let i=0;i<45;i++){
+        const a=rand()*tau,r=Math.sqrt(rand()),px=x+Math.cos(a)*rx*r,py=y+Math.sin(a)*ry*r;
+        const size=range(.09,.27)*rx; oval(px,py,size,size*range(.63,1.2),pick(colors.slice(0,3)),rand()*.5);
+      }
+      for(let i=0;i<65;i++){
+        const a=rand()*tau,r=Math.sqrt(rand()),px=x+Math.cos(a)*rx*r,py=y+Math.sin(a)*ry*r;
+        if((px-x)/rx-(py-y)/ry<-.25 && rand()<.77)continue;
+        const size=range(.035,.14)*rx; oval(px,py,size,size*.58,pick(colors.slice(2)),range(-.8,.8));
+      }
+    }
+    const amb=['#92583d','#b76e38','#cc853c','#eaa449','#f3c160'];
+    const red=['#873f39','#a34d35','#bc5a33','#d7773c','#df914d'];
+    const green=['#375c51','#4d6b4a','#6b794b','#92934e','#adb264'];
+    for(let i=0;i<47;i++){
+      const x=range(-30,1030),base=range(309,392),h=range(53,150);
+      const px=x+range(-10,10),py=base-h;
+      line(x,base,px,py,'#736b50',range(1.6,4.5));
+      for(let j=0;j<4;j++){
+        const dir=j%2===0?-1:1;const ex=px+dir*range(9,28),ey=py+range(-3,29);
+        line(x,py+range(30,70),ex,ey,'#6c6550',1.3);
+        crown(ex,ey,range(13,26),range(12,23),pick([amb,red,green]));
+      }
+    }
+    // An open central glade catches the last light.
+    path('M0 388 Q155 336 321 369 Q476 396 621 357 Q792 322 1000 355 L1000 600 H0Z',gradient(0,350,0,590,[[0,'#878546'],[.31,'#81703c'],[.63,'#715237'],[1,'#3a4637']]));
+    for(let i=0;i<2600;i++){
+      const x=range(0,1000),y=range(360,545),r=range(.5,2.9)*(y/440);
+      oval(x,y,r*range(1.2,2.8),r*.45,pick(['#72743f','#897c41','#a48a47','#ba914b','#6a653d','#c39a554d']),range(-.2,.2));
+    }
+    path('M-52 451 Q110 403 245 420 T493 422 Q679 401 860 401 Q935 404 1015 390 L1010 498 Q822 497 712 493 T458 508 Q243 498 96 521 L-50 540Z',gradient(0,401,0,520,[[0,'#a38152'],[.5,'#99774d'],[1,'#735a3c']]));
+    for(let i=0;i<900;i++){
+      const x=range(0,1000),y=range(425,501),w=range(.5,4);
+      oval(x,y,w,.5,pick(['#745b3b55','#bba16c77','#654a3555','#e3ba7955']));
+    }
+    // Long shafts of sunshine filter across the distant floor.
+    c.save(); c.globalAlpha=.13;
+    for(let i=0;i<7;i++){const x=range(465,932);path('M'+x+' 48 l19 0 -155 341 -49 0Z',gradient(0,64,0,395,[[0,'#fff7c400'],[.5,'#fff7c4'],[1,'#fff7c4aa']]));}c.restore();
+    function birch(x,base,h,w){
+      const lean=range(-16,17);
+      c.save();c.translate(x,base);c.rotate(lean*.005);
+      path('M'+(-w*.75)+' 0 Q'+(-w*.5)+' '+(-h*.52)+' '+(-w*.31)+' '+(-h)+' L'+(w*.32)+' '+(-h)+' Q'+(w*.25)+' '+(-h*.45)+' '+(w*.77)+' 0Z',gradient(-w,0,w,0,[[0,'#667268'],[.44,'#b2b4a0'],[.78,'#ece1ba'],[1,'#cdbf9d']]));
+      for(let j=0;j<24;j++){const y=range(-h+3,-1),a=range(-w*.37,w*.26);line(a,y,a+range(.5,w*.29),y+range(-.8,.8),'#5a6256',range(.55,1.8));}
+      for(let j=0;j<4;j++){const y=range(-h*.9,-h*.48),dir=j%2===0?-1:1;path('M0 '+y+' q'+(dir*11)+' -4 '+(dir*28)+' -30',null,'#63675a',1.6);}
+      c.restore();
+    }
+    for(const x of [9,56,314,357,675,697,920,962,980])birch(x,range(355,395),range(185,355),range(4,8));
+    for(const x of [1,54,286,346,673,930,987]){
+      crown(x,range(36,100),range(38,80),range(32,65),pick([amb,red,green]));
+    }
+    // The old oak anchors the composition and supplies an unobscured squirrel perch.
+    const bark=gradient(43,0,177,0,[[0,'#3b3c32'],[.33,'#4c4435'],[.65,'#67513a'],[.84,'#785a3f'],[1,'#8e704c']]);
+    path('M28 -15 C53 63 74 128 77 195 C82 249 79 311 66 359 C55 402 45 425 5 448 Q63 440 99 420 Q86 439 69 451 Q114 440 140 420 Q167 430 210 433 Q171 416 152 392 C128 353 130 288 142 223 C155 180 158 120 149 70 Q142 20 148 -14Z',bark);
+    path('M115 332 Q140 294 171 280 Q207 266 243 269 Q279 268 312 245 Q284 257 256 259 Q217 259 191 266 Q151 275 135 292Z',bark);
+    path('M99 185 Q63 119 13 83 L-10 61 L-10 37 Q30 72 52 87 Q78 102 100 110Z','#514937');
+    path('M113 186 Q144 124 201 96 Q250 67 298 7 L304 -10 L283 -10 Q236 51 188 78 Q144 99 121 102Z','#61503b');
+    for(let i=0;i<35;i++){
+      const x=range(77,129),y=range(-8,340),h=range(12,63),bend=range(-6,6);
+      path('M'+x+' '+y+' q'+bend+' '+h*.5+' '+range(-4,4)+' '+h,null,pick(['#3f4034','#564734','#9c795143','#796448']),range(.7,2.3));
+    }
+    for(let i=0;i<29;i++){const x=range(67,154),y=range(380,415);oval(x,y,range(2,7),range(1,3),pick(['#78814c','#566745','#586840','#899358']));}
+    // Large overhead leaf clusters frame the opening without swallowing the sky.
+    for(const [x,y,rx,ry,col] of [[8,9,130,89,green],[87,5,85,59,red],[174,-8,74,57,amb],[231,-7,83,41,red],[309,-26,85,48,amb],[448,-26,76,42,green],[881,-17,97,54,amb],[969,16,92,58,red],[1030,87,77,73,green]]){
+      crown(x,y,rx,ry,col);
+    }
+    function leaf(x,y,s,col,rot) {
+      c.save();c.translate(x,y);c.rotate(rot);c.scale(s,s);
+      path('M-1 0 Q-6 -2 -8 -5 L-4 -4 -5 -8 -1 -5 1 -10 3 -5 7 -7 5 -2 8 -2 Q6 2 0 3Z',col);
+      if(s>.58)line(0,4,1,-5,'#6b502a7d',.7);
+      c.restore();
+    }
+    for(let i=0;i<730;i++){
+      let x=range(-8,1008),y=range(372,600);
+      if(y>421&&y<496&&x>130&&x<890&&rand()>.085)continue;
+      let s=(.14+(y-360)*.0026)*range(.55,1.35);
+      leaf(x,y,s,pick(['#ad5637','#c97c40','#bb8b42','#b5a15c','#a24434','#745f39','#d79a4c','#6d643b']),range(-2,2));
+    }
+    function fern(x,y,size,color,tilt){
+      c.save();c.translate(x,y);c.rotate(tilt);c.scale(size,size);
+      for(let j=-2;j<=2;j++){
+        const endX=j*10,endY=-49+Math.abs(j)*7;
+        const p=(t)=>[endX*t*1.15,endY*t+9*t*t];
+        const end=p(1);path('M0 0 Q'+endX*.45+' '+(endY*.6)+' '+end[0]+' '+end[1],null,color,1);
+        for(let k=1;k<10;k++){
+          const t=k/10,[bx,by]=p(t),l=Math.sin(t*Math.PI)*8+1;
+          for(const d of [-1,1]){
+            const dx=d*l+j*1.6;path('M'+bx+' '+by+' q'+(dx*.62)+' -1 '+dx+' '+(-l*.65)+' q'+(-dx*.35)+' '+l*.66+' '+(-dx)+' '+l*.65+'Z',color);
+          }
+        }
+      }c.restore();
+    }
+    path('M-11 509 Q55 477 140 481 Q182 477 202 484 L192 495 Q100 491 5 521Z','#514834');
+    path('M-4 504 Q79 477 166 483',null,'#81915c',3);
+    for(let i=0;i<47;i++){
+      const x=range(-5,1006),y=range(381,575);
+      if(y>410&&y<510&&x>150&&x<902)continue;
+      if(x>200&&x<808&&y<535)continue;
+      fern(x,y,range(.34,1.22),pick(['#456447','#455840','#696f40','#868345','#62744a']),range(-.57,.57));
+    }
+    // Paint the woven harvest horn on a low stump, with red corn, squash and grapes.
+    c.save();c.translate(773,343);c.scale(1.18,1.18);
+    path('M-26 -10 Q-12 -16 10 -11 L12 7 18 12 Q8 16 -2 11 Q-15 16 -30 12 L-23 6Z','#6a5137');
+    oval(-6,-10,20,4,'#a08454');oval(-6,-11,14,2,'#c4a36b');
+    path('M-15 -13 Q3 -21 11 -30 Q19 -40 12 -43 Q24 -46 22 -32 Q20 -16 -1 -9Z','#a36832','#684c32',1.2);
+    path('M-14 -13 Q1 -18 10 -24 Q18 -31 19 -40',null,'#e2ac58',1.4);
+    for(let j=0;j<7;j++){
+      const x=1+j*2.6,y=-14-j*2.5;
+      path('M'+x+' '+(y-5)+' q5 0 7 3',null,'#61472e',.9);
+    }
+    oval(-10,-16,10,7,'#b98445',-.32);oval(-10,-16,8,5.5,'#64472d',-.32);
+    oval(-21,-13,6.5,4.5,'#e1ce85');oval(-25,-13,5,5.8,'#e9dba2',-.3);line(-26,-18,-26,-21,'#687347',1.8);
+    oval(-13,-12,5,4,'#d78238');line(-13,-16,-12,-19,'#516740',1);
+    for(let j=0;j<8;j++)oval(-7+(j%3)*2.5+Math.floor(j/3)*.3,-10+Math.floor(j/3)*2.1,1.7,1.6,j%3?'#725067':'#593f57');
+    oval(-18,-9,5.5,1.9,'#cb943e',-.16);
+    for(let j=0;j<6;j++)oval(-22+j*1.5,-9-j*.13,.65,1,'#9a4435'); c.restore();
+    // Fine paper grain. Composited once rather than generated during playback.
+    const paper=document.createElement('canvas');paper.width=paper.height=100;
+    const pc=paper.getContext('2d'),pix=pc.createImageData(100,100);
+    for(let i=0;i<pix.data.length;i+=4){const n=rand()>.5?255:12;pix.data[i]=n;pix.data[i+1]=n;pix.data[i+2]=n;pix.data[i+3]=Math.floor(rand()*12);}
+    pc.putImageData(pix,0,0);c.fillStyle=c.createPattern(paper,'repeat');c.fillRect(0,0,1000,600);
+    return canvas;
+  }
+  function settlers(c,t,phase){
+    const {path,oval,line}=brush(c);const turn=Math.sin(t*.58)*.7;
+    const elapsed=typeof phase==='number'?phase:0;
+    const reach=Math.max(0,Math.min(1,(elapsed-8)*2,(12-elapsed)*2));
+    const easeIn=u=>{u=Math.min(1,Math.max(0,u));return u*u*(3-2*u);};
+    // They come separately through the shaded opening and stay in the clearing.
+    const walk=easeIn((t-.1)/3.4),follow=easeIn((t-.8)/3.8);
+    const step=Math.sin(t*5.3)*(1-walk),step2=Math.sin(t*5.9)*(1-follow);
+    const glance=(1+Math.sin(t*.85))/2;
+    const arranging=(Math.sin(t*1.35)*3.5-1)*(1-reach);
+    c.save();
+    const light=c.createRadialGradient(723,290,4,723,300,90);
+    light.addColorStop(0,'rgba(255,215,146,.23)');light.addColorStop(1,'rgba(255,220,170,0)');
+    c.fillStyle=light;c.fillRect(625,205,200,180);c.restore();
+    c.save();c.translate(686+28*walk,345-1.6*Math.abs(step));c.scale(1.6,1.6);c.globalAlpha=.28+.72*walk;
+    oval(-1,1,11,1.8,'#3d40333f');
+    line(-3,-17,-5+4*step,-1,'#625d4c',3.5);line(3,-17,4-4*step,-1,'#565c50',3.5);
+    line(-6+4*step,0,-3+4*step,0,'#3d4037',2.2);line(3-4*step,0,7-4*step,0,'#3d4037',2.2);
+    path('M-4 -36 Q0 -37 4 -34 L7 -21 5 -16 -6 -16 -7 -22Z','#314958');
+    path('M-5 -19 L5 -19 5 -13 1 -12 -1 -15 -3 -12 -7 -14Z','#4a4e49');
+    c.save();c.translate(-glance,-35);c.rotate(-.09*glance-.11*reach);c.translate(0,35);oval(turn,-40,3.4,4.5,'#bf8f69');path('M-7 -43 L7 -43 6 -41 -7 -41Z','#393e39');path('M-4 -43 L-3 -49 2 -49 4 -43Z','#4c4841');c.restore();
+    path('M-3 -35 L1 -33 4 -35 3 -31 -2 -32Z','#c9c3a7');
+    // Musket held vertically while watching the woodland.
+    line(-10,-50,-9,-21,'#575a51',1.15);line(-9,-25,-10,-8,'#6e5037',2.2);
+    path('M-4 -32 Q-5 -27 -9 -27',null,'#4b5b5b',3);oval(-9,-27,1.6,1.5,'#c49c76');
+    c.restore();c.save();c.translate(708+33*follow,342-1.4*Math.abs(step2));c.scale(1.6,1.6);c.globalAlpha=.22+.78*follow;c.rotate(.024*step2+.022*Math.sin(t*1.35));
+    oval(0,2,12,1.9,'#3d40333f');
+    path('M-4 -35 Q0 -37 4 -33 L5 -23 Q8 -14 11 0 Q1 2 -10 -1 Q-7 -14 -5 -23Z','#974d38');
+    path('M-3 -26 L4 -26 8 -2 Q2 0 -4 -2Z','#dfc69a');oval(0,-38,3.4,4.1,'#cda17b');
+    path('M-5 -37 Q-6 -44 0 -44 Q5 -44 5 -39 L2 -40 -1 -42 -2 -35Z','#fff0d0');
+    path('M3 -32 Q8 -28 12 '+(-27+arranging),null,'#89604c',2.8);oval(12,-27+arranging,1.6,1.4,'#cc9c74');
+    oval(15,-26+arranging,4.3,1.4,'#d4a453',.26);
+    path('M-3 -32 Q-6 -24 '+(-6-5*reach)+' '+(-23-7*reach),null,'#8d604d',2.7);
+    oval(-6-5*reach,-23-7*reach,1.5,1.4,'#caa080');
+    c.restore();
+  }
+  window.drawForest=function(c,w,h,t,phase){
+    if(!landscape)landscape=compose();c.save();c.scale(w/1000,h/600);c.drawImage(landscape,0,0,1000,600);
+    const time=Number.isFinite(t)?t:0;settlers(c,time,phase);
+    const {oval}=brush(c);
+    // Sparse drifting leaves; the foreground remains visually quiet around the bird.
+    for(let i=0;i<9;i++){
+      const duration=12+i*.83,p=(time/duration+i*.157)%1;
+      const x=(i*131+70+p*78+Math.sin(p*11+i)*17)%1000,y=-12+p*410;
+      oval(x,y,2.6+Math.sin(p*12+i),1.3,['#c96d36','#dc9d47','#ac5940'][i%3],p*8+i);
+    }c.restore();
+  };
+})();
+
+/* Coordinates are relative to the patch of ground beneath the hips.
+   Each anatomical landmark follows the same transforms as its visible part. */
+function drawTurkey(ctx, x, y, scale, pose, cycle) {
+  const c = ctx;
+  const tau = Math.PI * 2;
+  const wave = Math.sin(cycle), double = Math.cos(2 * cycle);
+  const running = pose === 'run', walking = pose === 'walk';
+  const peck = pose === 'peck', scratching = pose === 'scratch';
+  const strut=pose==='strut', flying=pose==='flight';
+  const fanOpen=strut ? Math.sin(Math.PI/2*Math.min(1,Math.max(0,cycle/2))) : 0;
+  const brake = pose === 'brake', alert = pose === 'alert', look = pose === 'look';
+  const dip = peck ? 0.83 + 0.17 * Math.cos(cycle) : 0;
+  const bob = running ? 2.5 * double : walking ? 1.3 * double : 0.6 * wave;
+  const lift = bob + (brake ? 6 : 0) + dip * 5;
+  const pitch = flying ? -0.13 : strut ? -0.08 : running ? 0.09 : brake ? -0.045 : dip * 0.14;
+  const ellipse = (cx, cy, rx, ry, rot, tint) => {
+    c.beginPath(); c.ellipse(cx, cy, rx, ry, rot, 0, tau); c.fillStyle = tint; c.fill();
+  };
+  const line = (points, tint, width) => {
+    c.beginPath(); c.moveTo(...points[0]);
+    for (let i = 1; i < points.length; i++) c.lineTo(...points[i]);
+    c.strokeStyle = tint; c.lineWidth = width; c.stroke();
+  };
+  const path = (d, tint, stroke, width = 1) => {
+    const p = new Path2D(d);
+    if (tint) { c.fillStyle = tint; c.fill(p); }
+    if (stroke) { c.lineWidth = width; c.strokeStyle = stroke; c.stroke(p); }
+  };
+  const grad = (x1,y1,x2,y2,stops) => {
+    const g = c.createLinearGradient(x1,y1,x2,y2);
+    for (let i=0; i<stops.length; i++) g.addColorStop(i/(stops.length-1),stops[i]);
+    return g;
+  };
+  c.save(); c.translate(x,y); c.scale(scale,scale);
+  c.lineCap = 'round'; c.lineJoin = 'round';
+
+  function leg(side) {
+    const phase = cycle + (side ? 0 : Math.PI);
+    const stride = running ? 27 : walking ? 14 : strut ? 5 : 0;
+    const kneeX = (side ? 2 : -5) + 9;
+    const kneeY = -48 + lift;
+    const swing = Math.max(0, Math.sin(phase));
+    let fx = (side ? 5 : -8) - stride * Math.cos(phase);
+    let fy = -3 - swing * (running ? 21 : walking ? 12 : 0);
+    if (brake) fx += side ? 17 : -10;
+    if(flying){fx-=side?24:29;fy-=side?29:34;}
+    if (scratching && side === (Math.floor(cycle/tau)%2+2)%2) {
+      fx += 12 + 19 * Math.cos(phase);
+      fy -= 12 * swing;
+    }
+    // Fold the intertarsal joint behind the line joining knee and toe.
+    const dx=fx-kneeX, dy=fy-kneeY, dist=Math.max(1,Math.hypot(dx,dy));
+    const shin=33, shank=29;
+    const along=Math.min(shin,(shin*shin-shank*shank+dist*dist)/(2*dist));
+    const offset=Math.sqrt(Math.max(0,shin*shin-along*along));
+    const hx=kneeX+(along*dx-offset*dy)/dist, hy=kneeY+(along*dy+offset*dx)/dist;
+    const dark=side?'#704a41':'#51413b', pink=side?'#bb8a72':'#896858';
+    line([[kneeX,kneeY],[hx,hy],[fx,fy]],dark,4.4);
+    line([[hx,hy],[fx,fy]],pink,2.8);
+    for(let r=0.14; r<0.95; r+=0.16) {
+      const a=hx+r*(fx-hx), b=hy+r*(fy-hy);
+      line([[a-0.85,b],[a+0.85,b-0.35]],dark,0.7);
+    }
+    line([[hx*0.45+fx*0.55,hy*0.45+fy*0.55],[hx*0.45+fx*0.55-3,hy*0.45+fy*0.55-2]],dark,1.3);
+    for(const [tx,ty] of [[-5,-0.3],[8,-0.3],[12,1],[7,2.3]]) {
+      line([[fx,fy],[fx+tx*0.52,fy+ty*0.5],[fx+tx,fy+ty]],pink,1.8);
+      line([[fx+tx,fy+ty],[fx+tx+Math.sign(tx)*1.4,fy+ty+0.1]],'#564438',0.8);
+    }
+    return [[fx+8,fy],[hx,hy]];
+  }
+  leg(0); const anchors=leg(1);
+  c.translate(0, -73+lift); c.rotate(pitch);
+  let fanPoint=[-97,-13], wingPoint=[-23,1];
+  if(strut){
+    c.save();c.translate(-38,-5);
+    const feathers=19;
+    // An oblique view of a full wheel gives the fan a curved, asymmetric profile.
+    for(let i=0;i<feathers;i++){
+      const n=i/(feathers-1);
+      const angle=-1.28+fanOpen*(-0.52+2.67*n)+0.013*Math.sin(2*cycle+n*8);
+      const len=64+fanOpen*(17+8*Math.sin(Math.PI*n));
+      const breadth=2.4+4.6*fanOpen;
+      c.save();c.rotate(angle);c.scale(breadth/7,len/88);
+      const blade='M0 0 C-3 -23 -8 -58 -7 -80 Q-6 -87 -1 -88 Q4 -90 7 -84 C10 -64 5 -24 0 0 Z';
+      path(blade,grad(0,-88,0,-4,['#d3ac76','#af703a','#825331','#60452e']),'#59432f',0.8);
+      c.save();c.clip(new Path2D(blade));
+      for(let b=13;b<84;b+=7) path('M-10 '+(-b)+' q9 4 20 -1',null,b>71?'#3b342c':'#6a4633',b>71?5.5:1.6);
+      path('M-9 -85 Q0 -81 9 -86',null,'#e9bd85',3.3);
+      path('M0 -1 Q-0.5 -45 0 -85',null,'#e4b781',0.8);
+      c.restore();c.restore();
+    }
+    const centerAngle=-1.28+fanOpen*(-0.52+2.67*0.50);
+    fanPoint=[-38+Math.sin(centerAngle)*78,-5-Math.cos(centerAngle)*78];
+    c.restore();
+  }
+  // Narrow overlapping cinnamon-barred rectrices stay furled while travelling.
+  for(let j=0; j<(strut?0:5); j++) {
+    c.save(); c.translate(-37,2-j*1.2); c.rotate(0.13+j*0.06+(running?0.018*wave:0));
+    const length=59+j*1.5;
+    c.scale(length/62,1);
+    const tailShape='M2 -5 Q-24 -12 -61 -6 Q-66 -4 -61 0 Q-33 8 2 4 Z';
+    path(tailShape,['#5a3829','#774b2c','#84512d','#926038','#a06c44'][j],'#493627',0.8);
+    c.save(); c.clip(new Path2D(tailShape));
+    for(let k=8;k<60;k+=6) line([[-k-3,-10],[-k+2,8]],k>48?'#322c26':'#583c2c',k>48?4:1.8);
+    line([[-61,-10],[-57,5]],'#d2a26b',3); c.restore(); c.restore();
+  }
+  if(strut){c.save();c.scale(1.045,1.17);}
+  const outline='M-62 -6 Q-49 -28 -24 -35 Q5 -42 27 -33 Q44 -28 49 -13 Q57 4 45 18 Q33 33 7 36 Q-20 38 -35 20 Q-45 10 -62 4 Z';
+  path(outline,grad(-15,-34,12,35,['#8f6837','#534e37','#565143','#332e2a','#221f21']),'#362d28',1.1);
+  c.save(); c.clip(new Path2D(outline));
+  // Scalloped body contour feathers, alternating copper and iridescent teal.
+  const tones=['#8f633e','#a37847','#526b55','#766646','#7c6244','#727957'];
+  for(let row=0; row<8; row++) {
+    for(let col=0; col<15; col++) {
+      const grain=Math.sin(col*42.37+row*11.09);
+      const a=-56+col*8+(row%2)*4+grain*1.5, b=-31+row*8+2*Math.sin(col*0.5)+grain;
+      c.save(); c.translate(a,b); c.rotate(-0.38+0.11*grain);c.scale(1+grain*0.08,1+grain*0.12);
+      path('M-4 -3 Q0 -6 4 -3 L4 0 Q2 5 -1 6 Q-4 5 -5 1 Z',
+        tones[(col*17+row*7)%tones.length]);
+      path('M-5 0 Q-4 6 -1 6 Q3 5 4 1',null,'#39372c',1.1);
+      path('M0 -3 L-1 3 M-1 1 l-2 -2',null,'#ab9266',0.48);
+      path('M-4 0 Q-3 4 -1 4 Q2 3 3 1',null,row<4?'#c0975b':'#96825a',0.8);
+      c.restore();
+    }
+  }
+  c.restore();
+  if(strut)c.restore();
+  // Folded barred flight feathers sit below a shield of shoulder coverts.
+  c.save(); c.translate(-4,-12);
+  for(let j=0;j<7;j++) {
+    c.save(); c.translate(3-j*1.2,j*1.4); c.rotate(-0.23-j*0.044);
+    const shape='M7 -4 Q-17 -10 -50 -4 Q-59 -1 -60 3 Q-44 9 -10 6 Q2 5 7 1 Z';
+    path(shape,'#4d4136','#403730',0.7);
+    c.save(); c.clip(new Path2D(shape));
+    for(let k=11;k<65;k+=6.7) line([[-k-4,-9],[-k+2,9]],'#c9af89',2.8);
+    line([[3,1],[-58,2]],'#8b765e',0.8); c.restore(); c.restore();
+  }
+  const wing='M15 -8 Q24 3 10 14 Q-10 27 -38 20 Q-48 17 -47 11 Q-37 3 -24 -4 Q-2 -16 15 -8 Z';
+  path(wing,grad(-20,-12,0,23,['#96713f','#886443','#5d4936']),'#4e4131',0.8);
+  c.save(); c.clip(new Path2D(wing));
+  for(let r=0;r<4;r++) for(let i=0;i<8;i++){
+    const a=-38+i*8+(r%2)*4,b=-6+r*7;
+    path('M'+(a-3)+' '+b+' q-4 5 -3 7 q4 2 8 -3',null,'#b18c5b',1.3);
+  } c.restore(); c.restore();
+
+  if(flying){
+    const stroke=Math.sin(cycle);
+    // Two articulated vanes: the elbow unfolds first and the long wrist feathers follow.
+    c.save();c.translate(9,-13);
+    const ex=-10-15*Math.cos(cycle),ey=-12+34*stroke;
+    const wx=ex-16-10*Math.cos(cycle-0.38),wy=ey+25*Math.sin(cycle-0.38);
+    path('M0 -3 Q'+ex+' '+(ey-9)+' '+wx+' '+wy+' L'+(wx-6)+' '+(wy+9)+' Q'+(ex-5)+' '+(ey+11)+' -12 7 Z',
+      grad(0,-35,0,40,['#876641','#9e784c','#5a4736']),'#5d4936',1.2);
+    for(let i=0;i<10;i++){
+      const ratio=i/9, tx=wx-15-19*ratio,ty=wy+(8+34*ratio)*Math.sin(cycle-0.48)+i*0.95;
+      c.save();c.translate(wx+(1-ratio)*12,wy+(1-ratio)*4);
+      const dx=tx-(wx+(1-ratio)*12),dy=ty-(wy+(1-ratio)*4);
+      c.rotate(Math.atan2(dy,dx));c.scale(Math.max(10,Math.hypot(dx,dy))/42,1);
+      const primary='M0 -3 Q19 -5 39 -2 Q44 -1 43 1 Q25 5 0 3 Z';
+      path(primary,['#6d5742','#867057','#7a6046'][i%3],'#41392e',0.7);
+      c.save();c.clip(new Path2D(primary));
+      for(let j=6;j<39;j+=7)line([[j,-6],[j+3,6]],'#ceb893',2.5);
+      c.restore();c.restore();
+    }
+    c.restore();wingPoint=[9+wx,-13+wy];
+  }
+
+  const neckX=running?8:0;
+  let headX=44+neckX+(alert?4:0)+(look?-10:0)+(walking?3*wave:0);
+  let headY=-58+(alert?-7:0)+(look?-9:0)+(running?12:0)+wave*0.7;
+  if(strut){headX=44+wave*1.2;headY=-45+2*wave;}
+  if(flying){headX=59;headY=-36+2*wave;}
+  if(brake){headX+=4*Math.cos(cycle);headY-=2*Math.sin(cycle);}
+  if(peck){headX=47+30*dip;headY=-48+103*dip;}
+  if(scratching){headX+=10;headY+=14;}
+  const elbowX=headX-(peck?11:3), elbowY=headY+13;
+  const neck='M25 -23 Q37 -36 '+(elbowX-7)+' '+elbowY+' Q'+(headX-8)+' '+(headY-4)+' '+headX+' '+(headY-4)+' Q'+(headX+6)+' '+headY+' '+(elbowX+4)+' '+(elbowY+3)+' Q'+(peck?55:39)+' -13 44 -7 Q38 -4 31 -12 Z';
+  path(neck,grad(headX,headY,34,-11,['#7babb1','#798f96','#af635d','#973f37']),'#674842',0.9);
+  // Caruncled throat and the long, fine chest beard.
+  ellipse(40,-16,5,8,-0.1,'#a65040'); ellipse(42,-16,2,5,-0.1,'#cc7961');
+  const beardX=47+(brake?7:running?-6:0)+wave*1.0;
+  const beardY=30+(running?-2:0);
+  for(let k=0;k<7;k++) path('M'+(43+k*0.5)+' -1 Q49 13 '+(beardX+k*0.44)+' '+(beardY-((k*3)%4)),null,k%2?'#322f29':'#211f20',1.05);
+  c.save(); c.translate(headX,headY); c.rotate(peck?0.53:look?-0.30:0);
+  ellipse(0,0,9.6,8.2,-0.12,grad(-3,-8,2,8,['#b7d0c5','#82a9aa','#81959b']));
+  path('M5 -2 Q13 -3 20 2 Q15 4 7 4 Z','#c4a67c','#695444',0.7);
+  path('M5 -4 Q10 -5 12 -1 Q12 5 15 7 Q11 9 9 4 Z','#bc5b51');
+  ellipse(3,-2,2.7,2.2,0,'#65483b'); ellipse(3.4,-2.1,1.8,1.8,0,'#1e2020'); ellipse(3.9,-2.7,0.55,0.55,0,'#fff3d1');
+  for(let k=0;k<7;k++) ellipse(-6+(k%3)*2.7,2+Math.floor(k/3)*1.8,0.8,0.6,0,k%2?'#c78f82':'#ad7570');
+  c.restore(); c.restore();
+  anchors.push([beardX*Math.cos(pitch)-beardY*Math.sin(pitch),-73+lift+beardX*Math.sin(pitch)+beardY*Math.cos(pitch)]);
+  for(const [a,b] of [fanPoint,wingPoint,[headX+10,headY+2]]){
+    anchors.push([a*Math.cos(pitch)-b*Math.sin(pitch),-73+lift+a*Math.sin(pitch)+b*Math.cos(pitch)]);
+  }
+  return anchors.map(([a,b])=>[x+scale*a,y+scale*b]);
+}
+
+const art=document.getElementById('wood').getContext('2d');art.save();art.translate(0,-213);drawForest(art,1000,600,9,9);drawTurkey(art,365,483,1.39,'strut',4.2);art.restore();
+</script></body></html>
